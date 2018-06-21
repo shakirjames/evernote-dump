@@ -135,8 +135,9 @@ def main(args):
         sys.exit()
 
     # INIT Request user input
-    choose_language()
+    #choose_language()
     global keep_file_names
-    keep_file_names = is_yes_no('_keep_file_names_q')
+    #keep_file_names = is_yes_no('_keep_file_names_q')
+    keep_file_names = True
 
     run_parse(args)

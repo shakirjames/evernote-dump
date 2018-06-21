@@ -12,7 +12,8 @@ import uuid
 # Note Class #
 ##############
 class Note(object):
-    __MEDIA_PATH = "media/"
+    #__MEDIA_PATH = "media/"
+    __MEDIA_PATH = ""
     __ISO_DATE_FORMAT = "%Y%m%dT%H%M%SZ"
     __TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
@@ -71,7 +72,7 @@ class Note(object):
         
     def convert_evernote_markings_attachments(self):
         # Find all attachment links in notes
-        matches = re.findall(r'<en-media[^>]*\/>', self.__html)
+        matches = re.findall(r'<en-media[^>]*>', self.__html)
         # Replace all attachments links with a hash placeholder
         for i in range(len(matches)):
             _hash = re.findall(r'[a-zA-Z0-9]{32}', matches[i])
@@ -89,13 +90,14 @@ class Note(object):
 
     def create_filename(self):
         self.__filename = check_for_double(make_dir_check(self.__path),  url_safe_string(self.__title[:30]) + ".md")
-    
+
     def create_markdown(self):
         self.clean_html()
         self.convert_html_to_markdown()
         self.create_markdown_attachments()
         self.create_markdown_note_attr()
         if len(self.__tags) > 0:
+            self.__filename = f'{self.__tags[0].lower()}.{self.__filename}'
             self.create_markdown_note_tags()
         self.create_file()
             
@@ -167,7 +169,8 @@ import binascii  # Used to convert hash output to string
 
 
 class Attachment(object):
-    __MEDIA_PATH = "media/"
+    #__MEDIA_PATH = "media/"
+    __MEDIA_PATH = ""
     __TIME_FORMAT = "%Y-%m-%d_%H-%M-%S"
 
     def __init__(self):
@@ -204,8 +207,7 @@ class Attachment(object):
                 __extension = "jpg"
 
         if keep_file_names and __base:
-            # Limit filename length to 30 characters
-            self.__filename = url_safe_string(__base[:30]) + '.' + __extension
+            self.__filename = url_safe_string(__base) + '.' + __extension
         else:
             # Create a filename from created date if none found or unwanted
             self.__filename = self.__created_date.strftime(self.__TIME_FORMAT) + '.' + __extension
