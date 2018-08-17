@@ -207,7 +207,7 @@ class Attachment(object):
                 __extension = "jpg"
 
         if keep_file_names and __base:
-            self.__filename = url_safe_string(__base) + '.' + __extension
+            self.__filename = url_safe_string(__base[:127]) + '.' + __extension
         else:
             # Create a filename from created date if none found or unwanted
             self.__filename = self.__created_date.strftime(self.__TIME_FORMAT) + '.' + __extension
